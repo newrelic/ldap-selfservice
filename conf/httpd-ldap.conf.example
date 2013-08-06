@@ -1,0 +1,27 @@
+#
+# LDAP Self-Service Password Portal
+# http://ltb-project.org/wiki/documentation/self-service-passwor
+d
+#
+
+RewriteEngine On
+# This will enable the Rewrite capabilities
+
+RewriteCond %{HTTPS} !=on
+# This checks to make sure the connection is not already HTTPS
+
+RewriteRule ^/?selfserv/(.*) https://%{SERVER_NAME}/selfserv/$1
+[R,L]
+# This rule will redirect all users who are using any part of /s
+elfserv/ to the same location but using HTTPS.
+
+Alias /selfserv /var/www/ldap-selfservice
+
+<Directory /var/www/ldap-selfservice/>
+  DirectoryIndex index.php
+
+  AddDefaultCharset UTF-8
+
+  Order allow,deny
+  Allow from All
+</Directory>
