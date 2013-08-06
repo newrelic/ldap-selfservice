@@ -28,10 +28,14 @@
 $result = "";
 $login = "";
 $mail = "";
+$mailadmin = "";
 $ldap = "";
 $userdn = "";
 $token = "";
 
+$_POST["mail"] = $_POST["login"].'@'.$maildomain;
+
+if (isset($_POST["mailadmin"]) and $_POST["mailadmin"]) { $mailadmin = $_POST["mailadmin"]; }
 if (isset($_POST["mail"]) and $_POST["mail"]) { $mail = $_POST["mail"]; }
  else { $result = "mailrequired"; }
 if (isset($_REQUEST["login"]) and $_REQUEST["login"]) { $login = $_REQUEST["login"]; }
@@ -84,7 +88,7 @@ if ( $result === "" ) {
         $result = "ldaperror";
         error_log("LDAP - Bind error $errno (".ldap_error($ldap).")");
     } else {
-    
+
     # Search for user
     $ldap_filter = str_replace("{login}", $login, $ldap_filter);
     $search = ldap_search($ldap, $ldap_base, $ldap_filter);
@@ -103,7 +107,7 @@ if ( $result === "" ) {
         $result = "badcredentials";
         error_log("LDAP - User $login not found");
     } else {
-    
+
     # Compare mail values
     $mailValues = ldap_get_values($ldap, $entry, $mail_attribute);
     unset($mailValues["count"]);
@@ -162,25 +166,31 @@ if ( $result === "" ) {
     if (   ( $method === "http"  and $server_port != "80"  )
         or ( $method === "https" and $server_port != "443" )
     ) {
-        $server_name .= ":".$server_port; 
+        $server_name .= ":".$server_port;
     }
 
     $reset_url = $method."://".$server_name.$script_name."?action=resetbytoken&token=$token";
-    
+
     if ( !empty($reset_request_log) ) {
         error_log("Send reset URL $reset_url \n\n", 3, $reset_request_log);
     } else {
         error_log("Send reset URL $reset_url");
     }
 
-    $data = array( "login" => $login, "mail" => $mail, "url" => $reset_url ) ;
+    if ( $mailadmin == "yes" ) {
+      $mail_to = $mail.', '.$mailadminuser.'@'.$maildomain;
+    } else {
+      $mail_to = $mail;
+    }
+
+    $data = array( "login" => $login, "mail" => $mail_to, "url" => $reset_url ) ;
 
     # Send message
-    if ( send_mail($mail, $mail_from, $messages["resetsubject"], $messages["resetmessage"], $data) ) {
+    if ( send_mail($mail_to, $mail_from, $messages["resetsubject"], $messages["resetmessage"], $data) ) {
         $result = "tokensent";
     } else {
         $result = "tokennotsent";
-        error_log("Error while sending token to $mail (user $login)");
+        error_log("Error while sending token to $mail_to (user $login)");
     }
 }
 
@@ -208,8 +218,8 @@ if ( $show_help ) {
     <table>
     <tr><th><?php echo $messages["login"]; ?></th>
     <td><input type="text" name="login" value="<?php echo htmlentities($login) ?>" /></td></tr>
-    <tr><th><?php echo $messages["mail"]; ?></th>
-    <td><input type="text" name="mail" /></td></tr>
+    <tr><th>Carbon Copy (CC:) Token to Administrator</th>
+    <td><input type="checkbox" name="mailadmin" value="yes"></td></tr>
 <?php if ($use_recaptcha) { ?>
     <tr><td colspan="2">
 <?php echo recaptcha_get_html($recaptcha_publickey, null, $recaptcha_ssl); ?>

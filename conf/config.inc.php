@@ -130,6 +130,11 @@ $mail_from = "admin@example.com";
 # Notify users anytime their password is changed
 $notify_on_change = true;
 
+# default email domain
+$maildomain = "example.com"
+# admin user email  ("@".$defaultdomain appended in code)
+$mailadminuser = "admin"
+
 ## SMS
 # Use sms
 $use_sms = false;
