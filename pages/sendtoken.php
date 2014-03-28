@@ -33,8 +33,6 @@ $ldap = "";
 $userdn = "";
 $token = "";
 
-$_POST["mail"] = $_POST["login"].'@'.$maildomain;
-
 if (isset($_POST["mailadmin"]) and $_POST["mailadmin"]) { $mailadmin = $_POST["mailadmin"]; }
 if (isset($_POST["mail"]) and $_POST["mail"]) { $mail = $_POST["mail"]; }
  else { $result = "mailrequired"; }
@@ -218,6 +216,8 @@ if ( $show_help ) {
     <table>
     <tr><th><?php echo $messages["login"]; ?></th>
     <td><input type="text" name="login" value="<?php echo htmlentities($login) ?>" /></td></tr>
+    <tr><th><?php echo $messages["mail"]; ?></th>
+    <td><input type="text" name="mail" value="<?php echo htmlentities($mail) ?>" /></td></tr>
     <tr><th>Carbon Copy (CC:) Token to Administrator</th>
     <td><input type="checkbox" name="mailadmin" value="yes"></td></tr>
 <?php if ($use_recaptcha) { ?>
