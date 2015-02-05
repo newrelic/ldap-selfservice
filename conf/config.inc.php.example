@@ -131,9 +131,9 @@ $mail_from = "admin@example.com";
 $notify_on_change = true;
 
 # default email domain
-$maildomain = "example.com"
+$maildomain = "example.com";
 # admin user email  ("@".$defaultdomain appended in code)
-$mailadminuser = "admin"
+$mailadminuser = "admin";
 
 ## SMS
 # Use sms
