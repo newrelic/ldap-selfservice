@@ -159,6 +159,9 @@ $lang ="en";
 # Logo
 $logo = "/images/example-square.png";
 
+# Favicon
+$favicon = "style/favicon.ico";
+
 # Debug mode
 $debug = true;
 

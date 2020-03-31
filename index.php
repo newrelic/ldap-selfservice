@@ -117,8 +117,8 @@ if (!isset($pwd_show_policy_pos)) { $pwd_show_policy_pos = "above"; }
     <meta http-equiv="Content-Script-Type" content="text/javascript" />
     <meta http-equiv="cache-control" content="no-cache" />
     <link rel="stylesheet" type="text/css" href="style/styles.css" />
-    <link href="style/favicon.ico" rel="icon" type="image/x-icon" />
-    <link href="style/favicon.ico" rel="shortcut icon" />
+    <link href="<?php echo $favicon ?>" rel="icon" type="image/x-icon" />
+    <link href="<?php echo $favicon ?>" rel="shortcut icon" />
 </head>
 <body>
 
